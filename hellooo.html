@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dear Botakan</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    background: #fdf6f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    overflow-x: hidden;
+  }
+
+  .petals {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    top: -40px;
+    animation: fall linear infinite;
+    opacity: 0.6;
+  }
+
+  @keyframes fall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+
+  .card {
+    position: relative;
+    z-index: 1;
+    background: #fff8f5;
+    border: 1.5px solid #f5c9b8;
+    border-radius: 24px;
+    padding: 48px 40px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 8px 40px rgba(220, 130, 100, 0.1);
+  }
+
+  .rose {
+    font-size: 40px;
+    margin-bottom: 16px;
+    display: block;
+    animation: sway 3s ease-in-out infinite;
+  }
+  @keyframes sway { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)} }
+
+  .greeting {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 15px;
+    color: #9a7068;
+    font-style: italic;
+    margin-bottom: 4px;
+  }
+
+  h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 30px;
+    color: #3a2825;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+
+  h1 em { font-style: italic; color: #c9836e; }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #f5c9b8, transparent);
+    margin: 20px auto;
+  }
+
+  .message {
+    font-size: 14px;
+    color: #7a5a52;
+    line-height: 1.8;
+    margin-bottom: 16px;
+    font-weight: 300;
+  }
+
+  .date-detail {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 4px;
+    background: #fdeee8;
+    color: #b86a52;
+    border: 1px solid #f5c9b8;
+    border-radius: 16px;
+    padding: 10px 24px;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    margin: 0 0 28px;
+  }
+
+  .date-detail span { display: block; }
+
+  .dt-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #c9836e;
+    opacity: 0.7;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    min-height: 52px;
+  }
+
+  .btn {
+    border: none;
+    border-radius: 50px;
+    padding: 14px 36px;
+    font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, font-size 0.3s, padding 0.3s, opacity 0.4s;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  .btn-yes {
+    background: #e8806a;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(232, 128, 106, 0.35);
+  }
+  .btn-yes:hover { transform: scale(1.06); box-shadow: 0 6px 20px rgba(232, 128, 106, 0.5); }
+
+  .btn-no {
+    background: #fff;
+    color: #c9836e;
+    border: 1.5px solid #f5c9b8;
+  }
+  .btn-no:hover { background: #fdeee8; }
+
+  .screen { display: none; animation: fadeIn 0.4s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+  .no-question {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 22px;
+    color: #3a2825;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .final-message {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 22px;
+    color: #3a2825;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .sub-message {
+    font-size: 13px;
+    color: #9a7068;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+</style>
+</head>
+<body>
+
+<div class="petals" id="petals"></div>
+
+<div class="card">
+
+  <!-- SCREEN 1: The Invite -->
+  <div class="screen active" id="screen-invite">
+    <span class="rose">🌹</span>
+    <p class="greeting">Dear,</p>
+    <h1><em>Botakan</em></h1>
+    <div class="divider"></div>
+    <p class="message">Would you like to go on a date with me?</p>
+    <div class="date-detail">
+      <span class="dt-label">Date &amp; Time</span>
+      <span>22.03.2026 &nbsp;&middot;&nbsp; 17:00</span>
+    </div>
+    <div class="buttons">
+      <button class="btn btn-yes" onclick="showScreen('screen-yay')">Yes</button>
+      <button class="btn btn-no" onclick="noClick()">No</button>
+    </div>
+  </div>
+
+  <!-- SCREEN NO: dynamic -->
+  <div class="screen" id="screen-no">
+    <p class="no-question" id="no-question">Are you sure?</p>
+    <div class="divider"></div>
+    <div class="buttons">
+      <button class="btn btn-yes" id="yesBtnDyn" onclick="noClick()">Yes</button>
+      <button class="btn btn-no" id="noBtnDyn" onclick="showScreen('screen-yay')">No</button>
+    </div>
+  </div>
+
+  <!-- FINAL YES SCREEN -->
+  <div class="screen" id="screen-yay">
+    <span class="rose">🌹</span>
+    <p class="final-message">I knew you would say yes!</p>
+    <div class="divider"></div>
+    <p class="sub-message">
+      <strong style="color:#b86a52;font-weight:400;">22.03.2026 &nbsp;&middot;&nbsp; 17:00</strong>
+    </p>
+    <div class="divider"></div>
+    <p class="sub-message">
+      I will take care of everything.<br>
+      Just bring yourself and your beautiful smile.
+    </p>
+    <div class="divider"></div>
+    <p style="font-family:Georgia,serif;font-size:13px;color:#c9836e;font-style:italic;">See you soon.</p>
+  </div>
+
+</div>
+
+<script>
+  let noCount = 0;
+
+  const questions = [
+    'Are you sure?',
+    'Are you really sure?',
+    'Are you really really sure?',
+    'Are you really really really sure?',
+    'Are you really really really really sure?',
+    'Точно ма?'
+  ];
+
+  const sizes    = [15, 13, 11, 9, 7, 5];
+  const paddings = ['14px 36px', '12px 28px', '10px 20px', '8px 14px', '6px 10px', '4px 7px'];
+  const LAST = questions.length - 1;
+
+  function showScreen(id) {
+    ['screen-invite','screen-no','screen-yay'].forEach(s =>
+      document.getElementById(s).classList.remove('active')
+    );
+    document.getElementById(id).classList.add('active');
+    if (id === 'screen-yay') launchConfetti();
+  }
+
+  function noClick() {
+    const q  = document.getElementById('no-question');
+    const nb = document.getElementById('noBtnDyn');
+    const yb = document.getElementById('yesBtnDyn');
+
+    showScreen('screen-no');
+
+    const idx = Math.min(noCount, LAST);
+    q.textContent = questions[idx];
+    noCount++;
+
+    if (idx === LAST) {
+      yb.textContent = 'Шучу, согласна';
+      yb.style.fontSize = '15px';
+      yb.style.padding  = '14px 36px';
+      yb.onclick = function() { showScreen('screen-yay'); };
+      nb.style.display = 'none';
+    } else {
+      const sIdx = Math.min(noCount, sizes.length - 1);
+      yb.style.fontSize = sizes[sIdx] + 'px';
+      yb.style.padding  = paddings[sIdx];
+      nb.textContent = 'No';
+      nb.onclick = function() { showScreen('screen-yay'); };
+    }
+  }
+
+  function launchConfetti() {
+    const container = document.getElementById('petals');
+    container.innerHTML = '';
+    const items = ['🌸','🌹','🌷','✨','💕'];
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.className = 'petal';
+      p.textContent = items[Math.floor(Math.random() * items.length)];
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.animationDuration = (2.5 + Math.random() * 3) + 's';
+      p.style.animationDelay    = (Math.random() * 2) + 's';
+      p.style.fontSize = (14 + Math.random() * 10) + 'px';
+      container.appendChild(p);
+    }
+  }
+
+  (function initPetals() {
+    const container = document.getElementById('petals');
+    const items = ['🌸','🌷','✨'];
+    for (let i = 0; i < 10; i++) {
+      const p = document.createElement('div');
+      p.className = 'petal';
+      p.textContent = items[i % items.length];
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.animationDuration = (5 + Math.random() * 5) + 's';
+      p.style.animationDelay    = (Math.random() * 6) + 's';
+      p.style.fontSize = '16px';
+      container.appendChild(p);
+    }
+  })();
+</script>
+</body>
+</html>
